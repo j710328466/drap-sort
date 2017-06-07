@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>拖放排序</title>
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <div id="app">
+    <div class="main">
+      <div class="list" draggable="true">这是列表1的标题</div>
+      <div class="list" draggable="true">这是列表2的标题</div>
+      <div class="list" draggable="true">这是列表3的标题</div>
+      <div class="list" draggable="true">这是列表4的标题</div>
+      <div class="list" draggable="true">这是列表5的标题</div>
+      <div class="list" draggable="true">这是列表6的标题</div>
+      <div class="list" draggable="true">这是列表7的标题</div>
+    </div>
+    <div id="recycle">回收站</div>
+  </div>
+
+<script type="text/javascript">
+  let source = document.querySelectorAll('.list'),
+      dragElement = null,
+      lock = true,
+      recycle = document.getElementById('recycle');
+  for(let i = 0; i < source.length; i++) {
+    source[i].addEventListener('dragstart', function(event) {
+      this.style.backgroundColor = "pink";
+      this.style.cursor = "pointer";
+      dragElement = this;
+    },false);
+    source[i].addEventListener('dragend', function(event) {
+      event.target.style.background = "#fff"
+      event.preventDefault();
+    },false);
+    source[i].addEventListener('dragenter', function(event) {
+      if (dragElement != this) {
+        this.parentNode.insertBefore(dragElement, this);
+      }
+    },false);
+    source[i].addEventListener('dragleave', function(event) {
+      if (dragElement != this) {
+        if (lock && this === this.parentNode.lastElementChild ||
+        this === this.parentNode.lastChild
+        ) {
+          lock = false
+          this.parentNode.appendChild(dragElement);
+        } else {
+          lock = true
+        }
+      }
+    },false);
+  }
+  recycle.addEventListener('dragover', function(event) {
+    this.style.backgroundColor = "pink";
+    event.preventDefault();
+  },false);
+
+  recycle.addEventListener('drop', function(event) {
+    this.style.backgroundColor = '#ddd';
+    dragElement.parentNode.removeChild(dragElement);
+  },false);
+</script>
+</body>
+</html>
